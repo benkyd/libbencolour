@@ -1,7 +1,7 @@
 #include "bencolour/colour.h"
 #include <math.h>
 
-static float srgb_eotf(float v)
+float bc_srgb_eotf(float v)
 {
     float s = copysignf(1.0f, v);
     float a = fabsf(v);
@@ -9,7 +9,7 @@ static float srgb_eotf(float v)
     return s * out;
 }
 
-static float srgb_oetf(float v)
+float bc_srgb_oetf(float v)
 {
     float s = copysignf(1.0f, v);
     float a = fabsf(v);
@@ -20,17 +20,17 @@ static float srgb_oetf(float v)
 bc_linear_rgb_t bc_rgb_to_linear_rgb(bc_rgb_t in)
 {
     bc_linear_rgb_t out;
-    out.c[0] = srgb_eotf(in.c[0]);
-    out.c[1] = srgb_eotf(in.c[1]);
-    out.c[2] = srgb_eotf(in.c[2]);
+    out.c[0] = bc_srgb_eotf(in.c[0]);
+    out.c[1] = bc_srgb_eotf(in.c[1]);
+    out.c[2] = bc_srgb_eotf(in.c[2]);
     return out;
 }
 
 bc_rgb_t bc_linear_rgb_to_rgb(bc_linear_rgb_t in)
 {
     bc_rgb_t out;
-    out.c[0] = srgb_oetf(in.c[0]);
-    out.c[1] = srgb_oetf(in.c[1]);
-    out.c[2] = srgb_oetf(in.c[2]);
+    out.c[0] = bc_srgb_oetf(in.c[0]);
+    out.c[1] = bc_srgb_oetf(in.c[1]);
+    out.c[2] = bc_srgb_oetf(in.c[2]);
     return out;
 }

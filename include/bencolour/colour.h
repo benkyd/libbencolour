@@ -38,6 +38,12 @@ extern "C"
     BC_API bc_linear_rgb_t bc_rgb_to_linear_rgb(bc_rgb_t in);
     BC_API bc_rgb_t bc_linear_rgb_to_rgb(bc_linear_rgb_t in);
 
+    // Single-channel form of the same curve, for callers converting one
+    // value at a time (a UI swatch, a scalar luminance) rather than a
+    // full RGB triplet.
+    BC_API float bc_srgb_eotf(float v); // sRGB -> linear
+    BC_API float bc_srgb_oetf(float v); // linear -> sRGB
+
     // linear sRGB <-> OKLab (Ottosson 2020)
     BC_API bc_oklab_t bc_linear_rgb_to_oklab(bc_linear_rgb_t in);
     BC_API bc_linear_rgb_t bc_oklab_to_linear_rgb(bc_oklab_t in);
