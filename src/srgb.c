@@ -3,18 +3,20 @@
 
 float bc_srgb_eotf(float v)
 {
-    float s = copysignf(1.0f, v);
-    float a = fabsf(v);
-    float out = (a <= 0.04045f) ? a / 12.92f : powf((a + 0.055f) / 1.055f, 2.4f);
-    return s * out;
+    if (v <= 0.0f)
+        return 0.0f;
+    if (v >= 1.0f)
+        return 1.0f;
+    return (v <= 0.04045f) ? v / 12.92f : powf((v + 0.055f) / 1.055f, 2.4f);
 }
 
 float bc_srgb_oetf(float v)
 {
-    float s = copysignf(1.0f, v);
-    float a = fabsf(v);
-    float out = (a <= 0.0031308f) ? 12.92f * a : 1.055f * powf(a, 1.0f / 2.4f) - 0.055f;
-    return s * out;
+    if (v <= 0.0f)
+        return 0.0f;
+    if (v >= 1.0f)
+        return 1.0f;
+    return (v <= 0.0031308f) ? 12.92f * v : 1.055f * powf(v, 1.0f / 2.4f) - 0.055f;
 }
 
 bc_linear_rgb_t bc_rgb_to_linear_rgb(bc_rgb_t in)
