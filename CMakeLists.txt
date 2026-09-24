@@ -28,7 +28,7 @@ set_target_properties(libbencolour PROPERTIES
     OUTPUT_NAME bencolour
     C_VISIBILITY_PRESET hidden
     VISIBILITY_INLINES_HIDDEN ON
-    VERSION 1.0.0
+    VERSION 1.0.1
     SOVERSION 1
 )
 if(APPLE)
