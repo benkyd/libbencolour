@@ -1,4 +1,5 @@
-# standalone CPU colour-science: sRGB EOTF/OETF, OKLab, Planckian + CCT
+# standalone colour-science: sRGB EOTF/OETF, luminance, OKLab/OKLCh, Planckian + CCT
+# include/bencolour/colour.glsl mirrors the maths for shaders (sRGB, OKLab, luminance, XYZ)
 # pure C, float32, deterministic, only depends on libm
 
 # Emscripten has no installed-shared-library model (no SONAME/dylib

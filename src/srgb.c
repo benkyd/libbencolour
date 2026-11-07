@@ -19,6 +19,11 @@ float bc_srgb_oetf(float v)
     return (v <= 0.0031308f) ? 12.92f * v : 1.055f * powf(v, 1.0f / 2.4f) - 0.055f;
 }
 
+float bc_luminance(bc_linear_rgb_t in)
+{
+    return 0.2126f * in.c[0] + 0.7152f * in.c[1] + 0.0722f * in.c[2];
+}
+
 bc_linear_rgb_t bc_rgb_to_linear_rgb(bc_rgb_t in)
 {
     bc_linear_rgb_t out;

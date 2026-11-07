@@ -40,6 +40,16 @@ bc_linear_rgb_t bc_oklab_to_linear_rgb(bc_oklab_t in)
     return out;
 }
 
+bc_oklab_t bc_oklch_to_oklab(bc_oklch_t in)
+{
+    const float h = in.c[2] * (3.14159265358979f / 180.0f);
+    bc_oklab_t out;
+    out.c[0] = in.c[0];
+    out.c[1] = in.c[1] * cosf(h);
+    out.c[2] = in.c[1] * sinf(h);
+    return out;
+}
+
 bc_linear_rgb_t bc_lerp_oklab(bc_linear_rgb_t a, bc_linear_rgb_t b, float t)
 {
     if (t <= 0.0f)

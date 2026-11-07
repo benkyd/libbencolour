@@ -33,8 +33,13 @@ extern "C"
     {
         float c[3];
     } bc_oklab_t;
+    // OKLab in polar form: L, chroma, hue in degrees
+    typedef struct
+    {
+        float c[3];
+    } bc_oklch_t;
 
-    // sRGB <-> linear, IEC 61966-2-1 piecewise, odd-symmetric outside [0, 1]
+    // sRGB <-> linear, IEC 61966-2-1 piecewise, inputs clamped to [0, 1]
     BC_API bc_linear_rgb_t bc_rgb_to_linear_rgb(bc_rgb_t in);
     BC_API bc_rgb_t bc_linear_rgb_to_rgb(bc_linear_rgb_t in);
 
@@ -44,9 +49,13 @@ extern "C"
     BC_API float bc_srgb_eotf(float v); // sRGB -> linear
     BC_API float bc_srgb_oetf(float v); // linear -> sRGB
 
+    // Rec.709 relative luminance of linear sRGB
+    BC_API float bc_luminance(bc_linear_rgb_t in);
+
     // linear sRGB <-> OKLab (Ottosson 2020)
     BC_API bc_oklab_t bc_linear_rgb_to_oklab(bc_linear_rgb_t in);
     BC_API bc_linear_rgb_t bc_oklab_to_linear_rgb(bc_oklab_t in);
+    BC_API bc_oklab_t bc_oklch_to_oklab(bc_oklch_t in);
 
     // perceptually uniform mix; t clamped to [0, 1], result is linear sRGB
     BC_API bc_linear_rgb_t bc_lerp_oklab(bc_linear_rgb_t a, bc_linear_rgb_t b, float t);
