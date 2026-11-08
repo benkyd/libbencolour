@@ -70,4 +70,23 @@ float bc_hsv_saturation(vec3 c) {
     return mx > 1e-5 ? (mx - mn) / mx : 0.0;
 }
 
+
+// GLSL only (no colour.h counterpart). Sub-LSB TPDF dither from a coordinate hash, stable frame to frame: two uniforms
+// per channel give a triangular (-1, 1) LSB at 8 bits, and per-channel offsets make it colour noise, less visible than
+// luma noise.
+float bc_hash21(vec2 p) {
+    p = fract(p * vec2(123.34, 456.21));
+    p += dot(p, p + 78.233);
+    return fract(p.x * p.y);
+}
+vec3 bc_tpdf_dither_rgb(vec2 coord) {
+    float r1 = bc_hash21(coord + vec2(0.123, 0.456));
+    float r2 = bc_hash21(coord + vec2(7.890, 1.230));
+    float g1 = bc_hash21(coord + vec2(3.210, 6.540));
+    float g2 = bc_hash21(coord + vec2(9.870, 0.420));
+    float b1 = bc_hash21(coord + vec2(2.710, 5.830));
+    float b2 = bc_hash21(coord + vec2(4.660, 8.910));
+    return vec3(r1 - r2, g1 - g2, b1 - b2) * (1.0 / 255.0);
+}
+
 #endif
