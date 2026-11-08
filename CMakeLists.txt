@@ -2,13 +2,16 @@
 # include/bencolour/colour.glsl mirrors the maths for shaders (sRGB, OKLab, luminance, XYZ)
 # pure C, float32, deterministic, only depends on libm
 
+set(BENCOLOUR_VERSION 1.0.1)
+
 add_library(libbencolour SHARED
+    src/version.c
     src/srgb.c
     src/oklab.c
     src/planckian.c
 )
 target_include_directories(libbencolour PUBLIC include)
-target_compile_definitions(libbencolour PRIVATE BENCOLOUR_BUILDING_LIB)
+target_compile_definitions(libbencolour PRIVATE BENCOLOUR_BUILDING_LIB BENCOLOUR_VERSION="${BENCOLOUR_VERSION}")
 if(WIN32)
     target_compile_definitions(libbencolour PUBLIC BENCOLOUR_SHARED)
 endif()
@@ -16,7 +19,7 @@ set_target_properties(libbencolour PROPERTIES
     OUTPUT_NAME bencolour
     C_VISIBILITY_PRESET hidden
     VISIBILITY_INLINES_HIDDEN ON
-    VERSION 1.0.1
+    VERSION ${BENCOLOUR_VERSION}
     SOVERSION 1
 )
 if(APPLE)
