@@ -9,6 +9,7 @@ add_library(libbencolour SHARED
     src/srgb.c
     src/oklab.c
     src/planckian.c
+    src/tone.c
 )
 target_include_directories(libbencolour PUBLIC include)
 target_compile_definitions(libbencolour PRIVATE BENCOLOUR_BUILDING_LIB BENCOLOUR_VERSION="${BENCOLOUR_VERSION}")

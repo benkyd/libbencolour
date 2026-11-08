@@ -63,6 +63,24 @@ vec3 bc_oklab_to_linear_rgb(vec3 lab) {
                 -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s);
 }
 
+// Base tone curve, colour.h's bc_tone_prepare/bc_tone_eval: x = c, y = s, z = m.
+vec3 bc_tone_prepare(float lift, float contrast, float white) {
+    float g0   = 0.18;
+    float c    = max(contrast, 0.1);
+    float grey = g0 * exp2(-lift);
+    float w    = max(white, grey * 1.01);
+    float gc   = pow(grey, c);
+    float wc   = pow(w, c);
+    float s    = gc * wc * (1.0 - g0) / (g0 * wc - gc);
+    return vec3(c, s, (wc + s) / wc);
+}
+
+float bc_tone_eval(vec3 t, float y) {
+    if (y <= 0.0) return 0.0;
+    float yc = pow(y, t.x);
+    return t.z * yc / (yc + t.y);
+}
+
 // HSV saturation: (max - min) / max, 0 for black
 float bc_hsv_saturation(vec3 c) {
     float mx = max(max(c.r, c.g), c.b);
