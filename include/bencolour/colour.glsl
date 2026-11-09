@@ -63,22 +63,27 @@ vec3 bc_oklab_to_linear_rgb(vec3 lab) {
                 -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s);
 }
 
-// Base tone curve, colour.h's bc_tone_prepare/bc_tone_eval: x = c, y = s, z = m.
-vec3 bc_tone_prepare(float lift, float contrast, float white) {
-    float g0   = 0.18;
-    float c    = max(contrast, 0.1);
-    float grey = g0 * exp2(-lift);
-    float w    = max(white, grey * 1.01);
-    float gc   = pow(grey, c);
-    float wc   = pow(w, c);
-    float s    = gc * wc * (1.0 - g0) / (g0 * wc - gc);
-    return vec3(c, s, (wc + s) / wc);
+// Base tone curve, colour.h's bc_tone_prepare/bc_tone_eval: x = c, y = s, z = m, w = toe slope.
+vec4 bc_tone_prepare(float contrast, float white, float toe) {
+    float g0 = 0.18;
+    float c  = max(contrast, 0.1);
+    float w  = max(white, g0 * 1.01);
+    float gc = pow(g0, c);
+    float wc = pow(w, c);
+    float s  = gc * wc * (1.0 - g0) / (g0 * wc - gc);
+    return vec4(c, s, (wc + s) / wc, 0.4 * clamp(toe, 0.0, 1.0));
 }
 
-float bc_tone_eval(vec3 t, float y) {
+float bc_tone_eval(vec4 t, float y) {
     if (y <= 0.0) return 0.0;
-    float yc = pow(y, t.x);
-    return t.z * yc / (yc + t.y);
+    float yc  = pow(y, t.x);
+    float out_y = t.z * yc / (yc + t.y);
+    if (t.w > 0.0) {
+        const float kToeEase = 0.5;
+        float x = log2(y / 0.18);
+        out_y *= exp2(-t.w * kToeEase * log2(1.0 + exp2(-x / kToeEase)));
+    }
+    return out_y;
 }
 
 // HSV saturation: (max - min) / max, 0 for black

@@ -69,14 +69,15 @@ extern "C"
     BC_API void  bc_planckian_gains(float T_kelvin, float* r_out, float* b_out);
     BC_API float bc_planckian_cct(float r_ratio, float b_ratio);
 
-    // Base tone curve on scene-linear luminance: a log-logistic through display midgrey, reaching 1.0 at `white` with
-    // a non-zero slope so the top stops keep gradation. Scene midgrey sits `lift` stops below 0.18 in the input;
-    // `contrast` is the log-log slope at midgrey. Prepare once per parameter set, evaluate per sample.
+    // Base tone curve on linear luminance: a log-logistic through midgrey (0.18), reaching 1.0 at `white` with a
+    // non-zero slope so the top stops keep gradation; `contrast` is the log-log slope at midgrey. `toe` (0..1) deepens
+    // the shadows: up to 0.4 extra stops of slope per stop below midgrey, easing in so there is no kink, nothing above
+    // midgrey (midgrey itself darkens by at most 0.2 stop). Prepare once per parameter set, evaluate per sample.
     typedef struct
     {
-        float c, s, m;
+        float c, s, m, toe;
     } bc_tone_t;
-    BC_API bc_tone_t bc_tone_prepare(float lift, float contrast, float white);
+    BC_API bc_tone_t bc_tone_prepare(float contrast, float white, float toe);
     BC_API float     bc_tone_eval(bc_tone_t t, float y);
 
 #ifdef __cplusplus
