@@ -2,7 +2,7 @@
 # include/bencolour/colour.glsl mirrors the maths for shaders (sRGB, OKLab, luminance, XYZ)
 # pure C, float32, deterministic, only depends on libm
 
-set(BENCOLOUR_VERSION 1.0.1)
+set(BENCOLOUR_VERSION 1.0.2)
 
 add_library(libbencolour SHARED
     src/version.c
